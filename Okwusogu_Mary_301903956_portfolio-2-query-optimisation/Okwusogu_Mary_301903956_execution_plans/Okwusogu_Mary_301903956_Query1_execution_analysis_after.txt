@@ -1,0 +1,6 @@
+EXPLAIN ANALYZE
+SELECT *
+FROM financial_transaction
+WHERE transaction_status = 'POSTED'
+  AND created_at >= '2026-02-27 00:00:00'
+  AND created_at <  '2026-02-28 00:00:00';

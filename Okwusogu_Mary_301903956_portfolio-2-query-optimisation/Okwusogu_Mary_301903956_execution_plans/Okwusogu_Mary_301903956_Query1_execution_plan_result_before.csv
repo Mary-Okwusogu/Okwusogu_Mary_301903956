@@ -1,0 +1,2 @@
+id,select_type,table,partitions,type,possible_keys,key,key_len,ref,rows,filtered,Extra
+1,SIMPLE,financial_transaction,NULL,ALL,idx_transaction_status_time,NULL,NULL,NULL,500,100.00,"Using where"

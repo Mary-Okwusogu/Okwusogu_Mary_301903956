@@ -1,0 +1,4 @@
+EXPLAIN
+"-> Filter: ((financial_transaction.transaction_status = 'POSTED') and (cast(financial_transaction.created_at as date) = '2026-02-27'))  (cost=51.2 rows=500) (actual time=0.697..0.97 rows=18 loops=1)
+    -> Table scan on financial_transaction  (cost=51.2 rows=500) (actual time=0.636..0.876 rows=500 loops=1)
+"

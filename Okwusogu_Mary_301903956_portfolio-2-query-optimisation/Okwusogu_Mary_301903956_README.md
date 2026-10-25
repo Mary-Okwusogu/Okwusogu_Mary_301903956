@@ -1,163 +1,208 @@
-# Portfolio 2: Query Optimisation
+# Portfolio 2: Query Optimisation and Performance Analysis
 
 **Course:** MIT8103 — Advanced Database Systems  
 **Student Name:** Mary Okwusogu  
 **Student ID:** 301903956  
 **Institution:** Miva Open University  
-**Case Study Application:** BlitzFintech Performance Engineering  
-**Primary Database Engine:** MySQL 8.x (InnoDB Engine)  
-**Status:** Planned / In Progress *(Documentation and Roadmap Phase)*  
+**Database Platform:** MySQL 8.x  
+**Portfolio Status:** Implementation, Testing and Performance Analysis
 
 ---
 
-## 1. Executive Summary & Objectives
+## 1. Portfolio Overview
 
-Portfolio 2 focuses on **Query Optimisation and Performance Engineering** within relational database systems, building directly upon the BlitzFintech schema designed and implemented in Portfolio 1. As transaction volumes and customer records scale into millions of rows, naive SQL queries lead to full table scans, buffer pool contention, high query latency, and system bottlenecks.
+This portfolio focuses on SQL query optimisation and performance analysis using MySQL. It investigates six SQL queries through query execution, execution-plan inspection, result capture, and documented performance analysis.
 
-### Key Objectives
-1. **Query Profiling & Execution Plan Analysis:** Deconstruct relational query execution paths using `EXPLAIN`, `EXPLAIN ANALYZE`, and the MySQL Workbench Visual Explain tool to diagnose bottlenecks (table scans, index scans, temporary tables, filesorts).
-2. **Indexing Strategies & Data Structure Engineering:** Design, benchmark, and evaluate B-Tree indexing techniques—including single-column indexes, composite (multi-column) indexes, covering indexes, and prefix indexes—based on column cardinality and selectivity.
-3. **Query Refactoring & Algorithmic Optimisation:** Rewrite suboptimal SQL constructs (e.g., correlated subqueries vs. explicit `INNER/LEFT JOIN`s, `OR` clauses vs. `UNION ALL`, and `OFFSET/LIMIT` vs. keyset/cursor-based pagination).
-4. **Empirical Benchmarking & Metrics:** Measure latency (execution time in milliseconds), cost metrics, buffer pool logical/physical reads, and rows examined versus rows returned before and after optimisation.
-5. **Trade-off Evaluation:** Analyze the operational costs of indexing, including storage footprint and DML insert/update throughput degradation.
+The portfolio contains the SQL scripts, before-and-after execution evidence, CSV outputs, individual performance-analysis reports, and screenshot documents associated with the queries.
 
----
+The purpose is to demonstrate how SQL queries can be examined and evaluated using execution plans and empirical evidence. The analysis considers the execution strategy selected by MySQL, the potential impact of query structure and indexing, and whether observed changes improve execution behaviour while preserving query correctness.
 
-## 2. Scope & Target Workloads
+## 2. Objectives
 
-The optimization study will evaluate high-frequency and compute-intensive operational and analytical queries on the BlitzFintech database:
+The objectives of this portfolio are to:
 
-1. **High-Volume Ledger Auditing:** Filtering and sorting millions of `ledger_entry` records by account and date range to compute running balances and statements.
-2. **Customer Compliance & Risk Aggregation:** Complex multi-table joins linking `customer`, `kyc_case`, `customer_document`, and `account` to identify high-risk accounts with expired documentation.
-3. **Multi-Party Mandate Authorization Verification:** Time-sensitive queries checking active signatories and transaction limits before approving large financial transactions.
-4. **Idempotency Deduplication Lookup:** Microsecond-latency primary lookup on `idempotency_request(idempotency_key)` under concurrent API traffic.
-5. **System-Wide Audit Event Slicing:** Querying `audit_log` across JSON attributes and temporal windows for forensic analysis.
+1. Execute and evaluate six SQL queries.
+2. Examine query execution plans before and after optimisation where the relevant evidence is available.
+3. Investigate execution characteristics such as access methods, index selection, row estimates, filtering, joins, and sorting.
+4. Document query results and execution-analysis outputs.
+5. Analyse the effectiveness of optimisation changes using available evidence.
+6. Compare baseline and revised results to check query correctness.
+7. Present findings in individual performance-analysis reports supported by screenshots and output files.
 
----
+## 3. Directory Structure
 
-## 3. Directory Structure (Planned Architecture)
+The portfolio is organised into the following directories:
 
-To maintain consistency across the MIT8103 portfolio repository, this portfolio is organised as follows:
-
-```
-portfolio-2-query-optimisation/
-├── 01-documentation/
-│   ├── query-optimisation-report.docx             # Planned comprehensive academic report
-│   └── profiling-methodology.md                   # Technical profiling guidelines & metrics
-├── 02-baseline-queries/
-│   ├── 01-unindexed-workload.sql                  # Baseline queries executed without optimization
-│   └── 02-baseline-explain-plans.md               # Baseline EXPLAIN and EXPLAIN ANALYZE outputs
-├── 03-optimisation-implementation/
-│   ├── 01-index-creation.sql                      # DDL scripts adding composite & covering indexes
-│   ├── 02-refactored-queries.sql                  # Optimized and refactored SQL queries
-│   └── 03-stored-procedures.sql                  # Optimized procedural query patterns
-├── 04-benchmarks-and-evidence/
-│   ├── benchmark-results.xlsx                     # Comparative metrics (execution time, cost, I/O)
-│   ├── visual-explain-diagrams/                   # Graphical query execution tree comparisons
-│   └── screenshot-evidence.docx                   # Documented screenshot evidence of execution
-└── README.md                                      # Portfolio overview (this document)
-```
-
-> **Implementation Note:** This directory is currently initialized with the architectural specification and methodology. Implementation SQL scripts, synthetic load generators, and benchmark measurements will be populated during the active testing phase.
-
----
-
-## 4. Planned File Inventory & Descriptions
-
-### Documentation (`01-documentation/`)
-- `query-optimisation-report.docx`: Detailed academic report evaluating MySQL cost-based optimizer (CBO) decisions, execution algorithms (Nested Loop Join, Block Nested Loop, Hash Join), index internals, and quantitative benchmark results.
-- `profiling-methodology.md`: Measurement methodology defining warm vs. cold cache execution, MySQL `sys` schema monitoring, buffer pool flushing (`RESET QUERY CACHE;`), and precision timing.
-
-### Baseline Workloads (`02-baseline-queries/`)
-- `01-unindexed-workload.sql`: Test suite of 5–8 unoptimized queries running against large synthetic datasets (100,000+ customer and ledger rows), exhibiting table scans and temporary tables.
-- `02-baseline-explain-plans.md`: Raw textual and JSON execution plans capturing baseline cost metrics, access types (`ALL`, `index`, `range`), and estimated row examinations.
-
-### Optimization Implementation (`03-optimisation-implementation/`)
-- `01-index-creation.sql`: Targeted DDL script introducing composite indexes (e.g., `(account_id, created_at, entry_type)`), covering indexes containing projection columns, and prefix indexes for text fields.
-- `02-refactored-queries.sql`: Rewritten SQL scripts replacing anti-patterns (e.g., eliminating `SELECT *`, replacing `NOT IN (SELECT...)` with `NOT EXISTS` or `LEFT JOIN ... WHERE IS NULL`, implementing seek-based pagination).
-- `03-stored-procedures.sql`: Parameterized routines demonstrating optimized execution plans and plan caching.
-
-### Benchmarks & Evidence (`04-benchmarks-and-evidence/`)
-- `benchmark-results.xlsx`: Comparative matrix tabulating:
-  - Query ID and description
-  - Baseline execution time (ms) vs. Optimized execution time (ms)
-  - Rows examined vs. Rows returned
-  - Optimizer cost units
-  - Index storage overhead (MB)
-  - Percentage speedup calculation
-- `visual-explain-diagrams/`: Visual Explain screenshots illustrating the transition from costly full-table scans to indexed range scans.
-- `screenshot-evidence.docx`: Academic evidence document compiling screenshots of MySQL Workbench query executions, execution plans, and performance schema metrics.
-
----
-
-## 5. Technology Stack & Tooling
-
-- **DBMS Platform:** MySQL Community Server 8.0.x / 8.4 LTS
-- **Storage Engine:** InnoDB (B-Tree clustered primary indexes, secondary indexes, adaptive hash indexing)
-- **Profiling Tools:**
-  - `EXPLAIN FORMAT=JSON` / `EXPLAIN FORMAT=TREE`
-  - `EXPLAIN ANALYZE` (MySQL 8.0.18+) providing actual vs. estimated row counts and execution timing
-  - MySQL `Performance Schema` and `sys.statement_analysis`
-  - MySQL Workbench Visual Explain
-- **Data Generation:** Synthetic data scaling scripts generating realistic data volume with controlled cardinality.
-
----
-
-## 6. Optimization Methodology & Implementation Steps
-
-```mermaid
-flowchart TD
-    A[Identify Slow Query / Bottleneck] --> B[Generate Large Synthetic Dataset]
-    B --> C[Execute Baseline Query with EXPLAIN ANALYZE]
-    C --> D[Capture Baseline Metrics: Latency, Cost, Rows Examined]
-    D --> E{Determine Bottleneck Cause}
-    E -->|Missing/Suboptimal Index| F[Design Composite / Covering Index]
-    E -->|Inefficient SQL Pattern| G[Refactor Query: Joins, Slicing, Pagination]
-    F --> H[Apply Optimization to Database]
-    G --> H
-    H --> I[Re-run EXPLAIN ANALYZE on Optimized Query]
-    I --> J[Measure Speedup & Verify Result Correctness]
-    J --> K[Document Metrics & Compile Evidence]
+```text
+Okwusogu_Mary_301903956_portfolio-2-query-optimisation/
+│
+├── Okwusogu_Mary_301903956_README.md
+│
+├── Okwusogu_Mary_301903956_sql_queries/
+│   ├── Okwusogu_Mary_301903956_Query1.txt
+│   ├── Okwusogu_Mary_301903956_Query2.txt
+│   ├── Okwusogu_Mary_301903956_Query3.txt
+│   ├── Okwusogu_Mary_301903956_Query4.txt
+│   ├── Okwusogu_Mary_301903956_Query5.txt
+│   └── Okwusogu_Mary_301903956_Query6.txt
+│
+├── Okwusogu_Mary_301903956_execution_plans/
+│   ├── Query-specific execution plan files
+│   ├── Query-specific execution-analysis files
+│   └── Before-and-after CSV outputs
+│
+├── Okwusogu_Mary_301903956_performance_analysis/
+│   ├── Okwusogu_Mary_301903956_Query1_performance_analysis.md
+│   ├── Okwusogu_Mary_301903956_Query2_performance_analysis.md
+│   ├── Okwusogu_Mary_301903956_Query3_performance_analysis.md
+│   ├── Okwusogu_Mary_301903956_Query4_performance_analysis.md
+│   ├── Okwusogu_Mary_301903956_Query5_performance_analysis.md
+│   └── Okwusogu_Mary_301903956_Query6_performance_analysis.md
+│
+├── Okwusogu_Mary_301903956_query_results/
+│   └── Query result CSV files
+│
+└── Okwusogu_Mary_301903956_optimization_evidence_screenshots/
+    └── Query-specific screenshot evidence documents
 ```
 
-### Planned Implementation Phases
-1. **Workload Synthesis:** Expand Portfolio 1 test datasets using synthetic generator scripts to produce 50,000–500,000 records across `financial_transaction`, `ledger_entry`, and `customer_document`.
-2. **Diagnostic Profiling:** Execute each baseline query and analyze:
-   - Access Type: Flagging `ALL` (full table scan) and `index` (full index scan).
-   - Key Used: Verifying whether the optimizer selected the expected index.
-   - Extra Information: Flagging `Using temporary`, `Using filesort`, and `Using where`.
-3. **Index Engineering:**
-   - Implement Leftmost Prefix Rule on composite keys.
-   - Deploy covering indexes to enable index-only scans without secondary lookup back to the clustered primary key table.
-4. **Verification & Regression Testing:** Validate that the optimized queries return identical result sets to baseline queries to ensure functional correctness.
-5. **Benchmarking & Documentation:** Quantify performance deltas across repeated runs to account for cache warm-up and compile the academic report.
+*Note: The tree above is a summary of the main folders and representative files. Consult the actual directories for the complete list of execution-plan and evidence files.*
 
----
+## 4. SQL Query Scripts
 
-## 7. Current Status & Deliverable Tracking
+The `Okwusogu_Mary_301903956_sql_queries/` directory contains six SQL scripts.
 
-| Phase / Deliverable | Status | Target Completion | Evidence / Artifact |
-|---|---|---|---|
-| Portfolio Scope & Architecture | **Completed** | Milestone 1 | `README.md` (this file) |
-| Synthetic Dataset Scaler Script | Planned | Milestone 2 | `02-baseline-queries/` |
-| Baseline Workload & EXPLAIN Capture | Planned | Milestone 2 | `02-baseline-queries/` |
-| Index DDL & Refactored SQL Suite | Planned | Milestone 3 | `03-optimisation-implementation/` |
-| Comparative Benchmark Spreadsheet | Planned | Milestone 4 | `04-benchmarks-and-evidence/` |
-| Formal Academic Report & Evidence DOCX | Planned | Milestone 4 | `01-documentation/` |
+| File | Purpose |
+|---|---|
+| `Okwusogu_Mary_301903956_Query1.txt` | SQL query for the first optimisation exercise |
+| `Okwusogu_Mary_301903956_Query2.txt` | SQL query for the second optimisation exercise |
+| `Okwusogu_Mary_301903956_Query3.txt` | SQL query for the third optimisation exercise |
+| `Okwusogu_Mary_301903956_Query4.txt` | SQL query for the fourth optimisation exercise |
+| `Okwusogu_Mary_301903956_Query5.txt` | SQL query for the fifth optimisation exercise |
+| `Okwusogu_Mary_301903956_Query6.txt` | SQL query for the sixth optimisation exercise |
 
----
+Each script should be reviewed alongside its corresponding execution evidence and performance-analysis report. The specific purpose and optimisation technique for each query should be taken from its SQL and supporting documentation rather than inferred from the filename.
 
-## 8. Limitations & Engineering Considerations
+## 5. Execution Plans and Execution Analysis
 
-- **Buffer Pool Influences:** Repeated queries in a single session benefit from the InnoDB Buffer Pool. Benchmarks must differentiate between cold-start physical disk reads and warm-cache in-memory reads.
-- **Index Write Overhead:** While secondary indexes dramatically accelerate read latency (`SELECT`), each added index incurs write amplification on `INSERT`, `UPDATE`, and `DELETE` operations. This trade-off must be measured and documented.
-- **Data Skew & Selectivity:** Cardinality dictates optimizer choices. Low-cardinality columns (e.g., `party_type` with 2 values) will typically result in index bypass by the optimizer in favor of a table scan.
+The `Okwusogu_Mary_301903956_execution_plans/` directory contains execution-plan and execution-analysis evidence for the optimisation exercises.
 
----
+The captured files include before-and-after evidence for several queries, with CSV files containing recorded execution outputs.
 
-## 9. References & Standards
+These artefacts are used to investigate:
 
-1. Oracle Corporation (2024). *MySQL 8.0 Reference Manual: Optimization and Indexes*. Available at: https://dev.mysql.com/doc/refman/8.0/en/optimization.html.
-2. Winand, M. (2012). *SQL Performance Explained*. Vienna: Markus Winand.
-3. Schwartz, B. (2022). *High Performance MySQL: Proven Strategies for Operating at Scale*. 4th edn. Sebastopol, CA: O'Reilly Media.
-4. Graefe, G. (2011). 'Modern B-Tree Techniques'. *Foundations and Trends in Databases*, 3(4), pp. 203–402.
+- **Access methods:** Whether MySQL uses a table scan, index scan, range access, or another access method.
+- **Index selection:** Which index is selected by the optimiser, where reported.
+- **Rows examined:** The estimated or actual number of rows processed, depending on the evidence.
+- **Filtering:** How effectively query predicates reduce the candidate rows.
+- **Join processing:** The order and methods used to combine tables.
+- **Sorting and temporary operations:** Whether the execution plan reports sorting or temporary-table operations.
+- **Execution cost and timing:** The estimated cost and actual timing where available in the captured outputs.
+
+Estimated values and actual measurements are not interchangeable. Any comparison must account for what each output measures.
+
+## 6. Performance Analysis Reports
+
+The `Okwusogu_Mary_301903956_performance_analysis/` directory contains a separate Markdown report for each query.
+
+| Report | Coverage |
+|---|---|
+| `Okwusogu_Mary_301903956_Query1_performance_analysis.md` | Analysis of Query 1 |
+| `Okwusogu_Mary_301903956_Query2_performance_analysis.md` | Analysis of Query 2 |
+| `Okwusogu_Mary_301903956_Query3_performance_analysis.md` | Analysis of Query 3 |
+| `Okwusogu_Mary_301903956_Query4_performance_analysis.md` | Analysis of Query 4 |
+| `Okwusogu_Mary_301903956_Query5_performance_analysis.md` | Analysis of Query 5 |
+| `Okwusogu_Mary_301903956_Query6_performance_analysis.md` | Analysis of Query 6 |
+
+Each report should explain the query under investigation, the observed execution behaviour, the optimisation applied or evaluated, and the conclusions supported by the captured evidence.
+
+The reports should be interpreted together with their corresponding SQL scripts and execution-plan files.
+
+## 7. Query Result Files
+
+The `Okwusogu_Mary_301903956_query_results/` directory contains CSV files recording query outputs.
+
+These files support the review of returned data and help establish whether the query continues to produce the intended results following optimisation.
+
+Where before-and-after result sets are compared, the comparison should consider equivalent test conditions, sorting requirements, duplicate handling, and the expected semantics of the query.
+
+A faster execution is not a successful optimisation if it changes the intended result.
+
+## 8. Screenshot Evidence
+
+The `Okwusogu_Mary_301903956_optimization_evidence_screenshots/` directory contains Word documents with screenshots supporting the query optimisation exercises.
+
+The evidence documents include:
+
+- `Okwusogu_Mary_301903956_Query1_Screenshots.docx`
+- `Okwusogu_Mary_301903956_Query2_Screenshots.docx`
+- `Okwusogu_Mary_301903956_Query3_Screenshots.docx`
+- `Okwusogu_Mary_301903956_Query4_Screenshots.docx`
+- `Okwusogu_Mary_301903956_Query5_Screenshots.docx`
+- `Okwusogu_Mary_301903956_Query6_Screenshots.docx`
+
+These documents supplement the SQL scripts, execution outputs, and written analysis. They provide visual evidence of the query execution and optimisation work captured during testing.
+
+## 9. Tools and Techniques
+
+The portfolio uses MySQL and associated query-analysis tools. Depending on the specific query and captured evidence, the techniques include:
+
+- SQL query execution and comparison.
+- `EXPLAIN` for inspecting the optimiser's planned execution strategy.
+- `EXPLAIN ANALYZE` where supported and used to obtain actual execution information.
+- Execution-plan inspection and comparison.
+- CSV-based output review.
+- Performance-analysis documentation.
+- Screenshot capture and evidence organisation.
+
+Execution-plan features and available metrics depend on the MySQL version and the command used.
+
+## 10. Evaluation Method
+
+The optimisation exercises are evaluated through the following process:
+
+1. Identify the SQL query being investigated.
+2. Review the baseline SQL and available execution evidence.
+3. Examine the execution strategy and identify potential inefficiencies.
+4. Review the revised query or other optimisation change.
+5. Compare the available before-and-after execution evidence.
+6. Check whether the query results remain correct.
+7. Document the observed behaviour and any limitations in the corresponding performance-analysis report.
+
+Where execution-time measurements are available under comparable conditions, percentage change can be calculated as:
+
+\[
+\text{Time reduction (\%)} =
+\frac{T_{\text{before}}-T_{\text{after}}}
+{T_{\text{before}}}\times100
+\]
+
+A positive value indicates a reduction in execution time. A negative value indicates that execution time increased.
+
+This calculation should only be used where both measurements are available and comparable. Execution-plan changes alone should not be presented as a measured percentage improvement.
+
+## 11. Limitations and Considerations
+
+The results of query optimisation can be affected by several factors:
+
+- **Cache state:** Repeated executions may benefit from data already in memory.
+- **Data volume and distribution:** Execution plans may change as tables grow or data selectivity changes.
+- **Concurrent workload:** Other database operations can influence execution time.
+- **Estimated versus actual metrics:** Optimiser estimates may differ from actual execution behaviour.
+- **Index maintenance:** Additional indexes may improve some reads while increasing storage and write overhead.
+- **Result correctness:** Optimisation must preserve the intended query semantics.
+- **Measurement completeness:** Performance conclusions should be limited to the metrics actually captured.
+
+These considerations are important when interpreting the evidence and deciding whether an observed change represents a meaningful optimisation.
+
+## 12. Conclusion
+
+Portfolio 2 documents six SQL query optimisation exercises through query scripts, execution plans, execution-analysis outputs, CSV results, performance-analysis reports, and screenshot evidence.
+
+Together, these artefacts provide a structured record of the queries investigated, the execution behaviour observed, and the conclusions drawn from the available evidence. The effectiveness of each optimisation should be judged by the corresponding execution results, performance measurements where available, and verification of query correctness.
+
+## 13. References
+
+1. Oracle Corporation. *MySQL 8.0 Reference Manual: Optimization*. https://dev.mysql.com/doc/refman/8.0/en/optimization.html
+2. Winand, M. (2012). *SQL Performance Explained*.
+3. Schwartz, B., Zaitsev, P. and Tkachenko, V. (2012). *High Performance MySQL*. 3rd ed. O'Reilly Media.

@@ -1,0 +1,5 @@
+EXPLAIN
+"-> Sort: transaction_approval.decided_at  (cost=51.2 rows=500) (actual time=0.676..0.685 rows=255 loops=1)
+    -> Filter: (cast(transaction_approval.decided_at as date) between '2026-02-05' and '2026-02-18')  (cost=51.2 rows=500) (actual time=0.0795..0.58 rows=255 loops=1)
+        -> Table scan on transaction_approval  (cost=51.2 rows=500) (actual time=0.069..0.283 rows=500 loops=1)
+"

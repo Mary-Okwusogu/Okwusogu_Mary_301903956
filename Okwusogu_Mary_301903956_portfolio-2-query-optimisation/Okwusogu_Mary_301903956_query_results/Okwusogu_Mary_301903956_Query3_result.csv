@@ -1,0 +1,2 @@
+approval_id,transaction_id,approver_customer_id,mandate_id,decision,decision_reason,decided_at
+1,1,1,1,APPROVED,"Synthetic demo approval record.","2026-02-05 12:00:00"

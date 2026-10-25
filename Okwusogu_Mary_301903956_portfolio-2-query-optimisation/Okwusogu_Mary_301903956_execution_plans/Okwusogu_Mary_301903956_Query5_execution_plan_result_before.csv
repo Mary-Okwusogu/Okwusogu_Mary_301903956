@@ -1,0 +1,6 @@
+id,select_type,table,partitions,type,possible_keys,key,key_len,ref,rows,filtered,Extra
+1,SIMPLE,ft,NULL,ALL,PRIMARY,NULL,NULL,NULL,500,11.11,"Using where; Using temporary; Using filesort"
+1,SIMPLE,le,NULL,ref,"idx_ledger_account_time,idx_ledger_transaction",idx_ledger_transaction,8,blitzfintech_db.ft.transaction_id,1,100.00,NULL
+1,SIMPLE,a,NULL,eq_ref,PRIMARY,PRIMARY,8,blitzfintech_db.le.account_id,1,100.00,NULL
+1,SIMPLE,ap,NULL,ref,"PRIMARY,fk_ap_customer",PRIMARY,8,blitzfintech_db.le.account_id,1,100.00,"Using index"
+1,SIMPLE,c,NULL,eq_ref,PRIMARY,PRIMARY,8,blitzfintech_db.ap.customer_id,1,100.00,NULL

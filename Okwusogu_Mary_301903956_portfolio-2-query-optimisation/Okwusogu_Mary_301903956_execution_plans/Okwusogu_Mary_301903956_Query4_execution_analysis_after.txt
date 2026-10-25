@@ -1,0 +1,5 @@
+EXPLAIN ANALYZE
+SELECT document_id, customer_id, kyc_case_id, verification_status, expires_at
+FROM customer_document
+WHERE customer_id = 1
+  AND verification_status = 'VERIFIED';

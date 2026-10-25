@@ -1,0 +1,4 @@
+document_id,customer_id,kyc_case_id,verification_status,expires_at
+1,1,1,VERIFIED,2031-02-01
+2,1,1,VERIFIED,2031-02-01
+3,1,1,VERIFIED,2031-02-01

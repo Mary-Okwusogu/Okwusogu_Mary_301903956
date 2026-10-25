@@ -1,0 +1,14 @@
+EXPLAIN
+"-> Sort: ft.transaction_id, a.account_id, c.customer_id  (actual time=1.7..1.71 rows=204 loops=1)
+    -> Stream results  (cost=160 rows=77.8) (actual time=0.125..1.62 rows=204 loops=1)
+        -> Nested loop inner join  (cost=160 rows=77.8) (actual time=0.118..1.44 rows=204 loops=1)
+            -> Nested loop inner join  (cost=133 rows=77.8) (actual time=0.0828..1.25 rows=204 loops=1)
+                -> Nested loop inner join  (cost=106 rows=77.8) (actual time=0.077..0.894 rows=204 loops=1)
+                    -> Nested loop inner join  (cost=78.5 rows=77.8) (actual time=0.0706..0.75 rows=204 loops=1)
+                        -> Filter: ((ft.created_at >= TIMESTAMP'2026-02-10 00:00:00') and (ft.created_at < TIMESTAMP'2026-02-18 00:00:00'))  (cost=51.2 rows=55.5) (actual time=0.0481..0.274 rows=148 loops=1)
+                            -> Table scan on ft  (cost=51.2 rows=500) (actual time=0.0432..0.179 rows=500 loops=1)
+                        -> Index lookup on le using idx_ledger_transaction (transaction_id=ft.transaction_id)  (cost=0.353 rows=1.4) (actual time=0.00265..0.00308 rows=1.38 loops=148)
+                    -> Single-row index lookup on a using PRIMARY (account_id=le.account_id)  (cost=0.251 rows=1) (actual time=592e-6..610e-6 rows=1 loops=204)
+                -> Covering index lookup on ap using PRIMARY (account_id=le.account_id)  (cost=0.251 rows=1) (actual time=0.00104..0.00165 rows=1 loops=204)
+            -> Single-row index lookup on c using PRIMARY (customer_id=ap.customer_id)  (cost=0.251 rows=1) (actual time=779e-6..793e-6 rows=1 loops=204)
+"

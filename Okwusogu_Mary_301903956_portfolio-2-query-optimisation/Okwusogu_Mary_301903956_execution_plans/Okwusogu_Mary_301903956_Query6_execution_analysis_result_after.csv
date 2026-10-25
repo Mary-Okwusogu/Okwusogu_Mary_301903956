@@ -1,0 +1,7 @@
+EXPLAIN
+"-> Sort: financial_transaction.transaction_status  (actual time=0.234..0.234 rows=1 loops=1)
+    -> Table scan on <temporary>  (actual time=0.213..0.213 rows=1 loops=1)
+        -> Aggregate using temporary table  (actual time=0.212..0.212 rows=1 loops=1)
+            -> Filter: ((financial_transaction.created_at >= TIMESTAMP'2026-02-10 00:00:00') and (financial_transaction.created_at < TIMESTAMP'2026-02-18 00:00:00'))  (cost=31.4 rows=148) (actual time=0.0262..0.103 rows=148 loops=1)
+                -> Covering index range scan on financial_transaction using idx_transaction_date_status_amount over ('2026-02-10 00:00:00' <= created_at < '2026-02-18 00:00:00')  (cost=31.4 rows=148) (actual time=0.0241..0.0734 rows=148 loops=1)
+"

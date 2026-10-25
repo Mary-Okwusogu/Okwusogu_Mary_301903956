@@ -1,0 +1,5 @@
+EXPLAIN ANALYZE
+SELECT approval_id, transaction_id, approver_customer_id, mandate_id, decision, decided_at
+FROM transaction_approval
+WHERE DATE(decided_at) BETWEEN '2026-02-05' AND '2026-02-18'
+ORDER BY decided_at;

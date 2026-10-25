@@ -1,0 +1,6 @@
+EXPLAIN 
+SELECT ft.transaction_id, ft.transaction_reference, ft.transaction_status, ft.created_at, a.account_number, c.customer_number,
+ap.party_role FROM financial_transaction AS ft JOIN ledger_entry AS le ON le.transaction_id = ft.transaction_id
+JOIN account AS a ON a.account_id = le.account_id JOIN account_party AS ap ON ap.account_id = a.account_id
+JOIN customer AS c ON c.customer_id = ap.customer_id WHERE ft.created_at >= '2026-02-10 00:00:00'
+  AND ft.created_at <  '2026-02-18 00:00:00' ORDER BY ft.transaction_id, a.account_id, c.customer_id;

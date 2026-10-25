@@ -1,0 +1,7 @@
+EXPLAIN ANALYZE
+SELECT ledger_entry_id, transaction_id, account_id, entry_type, amount, created_at
+FROM ledger_entry
+WHERE account_id = 1
+  AND created_at >= '2026-02-02 00:00:00'
+  AND created_at <  '2026-02-18 00:00:00'
+ORDER BY created_at;

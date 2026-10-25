@@ -1,0 +1,2 @@
+id,select_type,table,partitions,type,possible_keys,key,key_len,ref,rows,filtered,Extra
+1,SIMPLE,transaction_approval,NULL,ALL,idx_approval_decided_at,NULL,NULL,NULL,500,51.00,"Using where; Using filesort"

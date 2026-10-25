@@ -7,7 +7,7 @@ ORDER BY created_at;
 
 
 Optimised Query
-=======================
+=====================
 SELECT ledger_entry_id, transaction_id, account_id, entry_type, amount, created_at
 FROM ledger_entry
 WHERE account_id = 1

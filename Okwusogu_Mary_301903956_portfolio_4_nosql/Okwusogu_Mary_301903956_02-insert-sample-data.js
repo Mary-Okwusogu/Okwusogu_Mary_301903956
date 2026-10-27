@@ -1,0 +1,13 @@
+// Synthetic MongoDB demonstration records. IDs 1,2,3 etc are illustrative only;
+// NOT verified against MySQL. Replace with actual MySQL IDs from the mapping query
+// before claiming cross-database referential correspondence.
+const b=db.getSiblingDB('blitzfintech_nosql');
+const hash='a'.repeat(64);
+const individual={customerId:NumberLong('1'),kycCaseId:NumberLong('1'),customerNumber:'BF-TEST-C001',status:'APPROVED',riskRating:'LOW',documents:[{documentId:NumberLong('1'),documentType:'NATIONAL_ID',storageObjectKey:'demo-only/kyc/1/national-id.jpg',sha256Checksum:hash,mimeType:'image/jpeg',verificationStatus:'VERIFIED',issuedAt:new Date('2025-01-01'),expiresAt:null,extractedData:{idType:'NIN_SLIP',issuingCountry:'NG',ninMasked:'****1234'},verifications:[{method:'DOCUMENT_AUTHENTICITY',provider:'DEMO_PROVIDER',status:'PASSED',confidenceScore:96.4,verifiedAt:new Date('2026-10-10'),providerDetails:{tamperDetected:false}}]}],updatedAt:new Date('2026-10-10')};
+const business={customerId:NumberLong('3'),kycCaseId:NumberLong('2'),customerNumber:'BF-TEST-C003',status:'IN_REVIEW',riskRating:'STANDARD',documents:[{documentId:NumberLong('2'),documentType:'CERTIFICATE_OF_INCORPORATION',storageObjectKey:'demo-only/kyc/3/incorporation.pdf',sha256Checksum:'b'.repeat(64),mimeType:'application/pdf',verificationStatus:'PENDING',extractedData:{registrationCountry:'NG',registrationNumber:'RC-DEMO-001'},verifications:[]}],updatedAt:new Date('2026-10-11')};
+for(const x of [individual,business]) b.kyc_profiles.updateOne({kycCaseId:x.kycCaseId},{$setOnInsert:x},{upsert:true});
+b.compliance_events.updateOne({eventId:'BF-EVT-KYC-001'},{$setOnInsert:{eventId:'BF-EVT-KYC-001',customerId:NumberLong('1'),kycCaseId:NumberLong('1'),eventType:'KYC_APPROVED',severity:'INFO',source:'KYC_SERVICE',details:{previousStatus:'IN_REVIEW',newStatus:'APPROVED'},createdAt:new Date('2026-10-10')}},{upsert:true});
+b.compliance_events.updateOne({eventId:'BF-EVT-RISK-002'},{$setOnInsert:{eventId:'BF-EVT-RISK-002',customerId:NumberLong('3'),eventType:'RISK_REVIEW_REQUIRED',severity:'MEDIUM',source:'RISK_ENGINE',details:{riskRating:'STANDARD'},createdAt:new Date('2026-10-11')}},{upsert:true});
+// Sample copied event is hypothetical, NOT a MySQL-committed transaction.
+b.transaction_events.updateOne({eventId:'BF-TXEVT-DEMO-001'},{$setOnInsert:{eventId:'BF-TXEVT-DEMO-001',transactionId:NumberLong('1'),transactionReference:'BF-DEMO-POSTED-001',accountId:NumberLong('1'),eventType:'DEPOSIT',entryType:'CREDIT',amount:NumberDecimal('1000.0000'),currency:'NGN',transactionStatus:'POSTED',createdAt:new Date('2026-10-12'),context:{synthetic:true,notReconciledWithMySQL:true}}},{upsert:true});
+print('Synthetic data inserted/upserted.');

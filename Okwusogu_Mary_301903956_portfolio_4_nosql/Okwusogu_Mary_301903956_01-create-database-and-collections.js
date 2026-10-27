@@ -1,0 +1,12 @@
+// mongosh: BlitzFintech Portfolio 4. Creates only MongoDB NoSQL complement.
+// MySQL blitzfintech_db remains authoritative. Do not run against a shared MongoDB without approval.
+const b = db.getSiblingDB('blitzfintech_nosql');
+function ensure(name, schema) {
+  if (!b.getCollectionNames().includes(name)) b.createCollection(name,{validator:{$jsonSchema:schema},validationLevel:'strict',validationAction:'error'});
+  else print('Already exists: '+name+'; inspect validator before use');
+}
+const long={bsonType:'long'};
+ensure('kyc_profiles',{bsonType:'object',required:['customerId','kycCaseId','customerNumber','status','riskRating','documents','updatedAt'],properties:{customerId:long,kycCaseId:long,customerNumber:{bsonType:'string'},status:{enum:['OPEN','IN_REVIEW','APPROVED','REJECTED','CLOSED']},riskRating:{enum:['LOW','STANDARD','HIGH']},documents:{bsonType:'array',items:{bsonType:'object',required:['documentId','documentType','storageObjectKey','sha256Checksum','mimeType','verificationStatus','verifications'],properties:{documentId:long,documentType:{bsonType:'string'},storageObjectKey:{bsonType:'string'},sha256Checksum:{bsonType:'string',pattern:'^[a-fA-F0-9]{64}$'},mimeType:{bsonType:'string'},verificationStatus:{enum:['PENDING','VERIFIED','REJECTED','EXPIRED']},issuedAt:{bsonType:['date','null']},expiresAt:{bsonType:['date','null']},extractedData:{bsonType:'object'},verifications:{bsonType:'array'}}}},updatedAt:{bsonType:'date'}}});
+ensure('compliance_events',{bsonType:'object',required:['eventId','customerId','eventType','severity','source','createdAt'],properties:{eventId:{bsonType:'string'},customerId:long,kycCaseId:long,eventType:{bsonType:'string'},severity:{enum:['INFO','LOW','MEDIUM','HIGH','CRITICAL']},source:{bsonType:'string'},details:{bsonType:'object'},createdAt:{bsonType:'date'}}});
+ensure('transaction_events',{bsonType:'object',required:['eventId','transactionId','transactionReference','accountId','eventType','amount','currency','transactionStatus','createdAt'],properties:{eventId:{bsonType:'string'},transactionId:long,transactionReference:{bsonType:'string'},accountId:long,eventType:{enum:['DEPOSIT','WITHDRAWAL','TRANSFER','REVERSAL']},entryType:{enum:['DEBIT','CREDIT']},amount:{bsonType:'decimal'},currency:{enum:['NGN']},transactionStatus:{enum:['PENDING','POSTED','FAILED','REVERSED']},createdAt:{bsonType:'date'},context:{bsonType:'object'}}});
+print(b.getName()); print(b.getCollectionNames());

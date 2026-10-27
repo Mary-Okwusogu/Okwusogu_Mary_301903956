@@ -1,0 +1,12 @@
+const b=db.getSiblingDB('blitzfintech_nosql');
+b.kyc_profiles.createIndex({kycCaseId:1},{unique:true,name:'uq_kycCaseId'});
+b.kyc_profiles.createIndex({customerId:1},{name:'idx_customerId'});
+b.kyc_profiles.createIndex({status:1,riskRating:1},{name:'idx_status_risk'});
+b.kyc_profiles.createIndex({'documents.expiresAt':1},{name:'idx_document_expiry'});
+b.compliance_events.createIndex({eventId:1},{unique:true,name:'uq_eventId'});
+b.compliance_events.createIndex({customerId:1,createdAt:-1},{name:'idx_customer_timeline'});
+b.compliance_events.createIndex({eventType:1,createdAt:-1},{name:'idx_event_type_time'});
+b.transaction_events.createIndex({eventId:1},{unique:true,name:'uq_transaction_eventId'});
+b.transaction_events.createIndex({accountId:1,createdAt:-1},{name:'idx_account_time'});
+printjson(b.kyc_profiles.getIndexes());printjson(b.compliance_events.getIndexes());printjson(b.transaction_events.getIndexes());
+printjson(b.kyc_profiles.find({customerId:NumberLong('1')}).explain('executionStats'));

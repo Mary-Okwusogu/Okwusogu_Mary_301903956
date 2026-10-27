@@ -1,0 +1,10 @@
+const b=db.getSiblingDB('blitzfintech_nosql');
+printjson(b.kyc_profiles.findOne({customerNumber:'BF-TEST-C001'},{customerNumber:1,status:1,riskRating:1,documents:1}));
+printjson(b.kyc_profiles.find({status:'IN_REVIEW'},{customerNumber:1,riskRating:1,updatedAt:1}).sort({riskRating:1,updatedAt:1}).toArray());
+printjson(b.kyc_profiles.find({documents:{$elemMatch:{documentType:'NATIONAL_ID'}}},{customerNumber:1,documents:1}).toArray());
+const now=new Date(), later=new Date(now.getTime()+30*86400000);
+printjson(b.kyc_profiles.find({documents:{$elemMatch:{expiresAt:{$gte:now,$lte:later}}}}).toArray());
+printjson(b.kyc_profiles.find({'documents.verifications.status':'FAILED'}).toArray());
+printjson(b.compliance_events.find({severity:{$in:['HIGH','CRITICAL']}}).sort({createdAt:-1}).toArray());
+printjson(b.compliance_events.find({customerId:NumberLong('1')}).sort({createdAt:1}).toArray());
+printjson(b.transaction_events.find({currency:'NGN'}).toArray());

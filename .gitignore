@@ -1,1 +1,5 @@
 .env
+
+# Portfolio 5 database backups
+**/backups/
+

@@ -1,135 +1,46 @@
-# MIT8103: Advanced Database Systems — Master's Portfolio Repository
+# MIT-8103 Advanced Database Systems — BlitzFintech Portfolio Repository
 
-**Student Name:** Mary Okwusogu  
+**Student:** Mary Okwusogu  
 **Student ID:** 301903956  
-**Programme:** Master of Science in Information Technology  
-**Course Code & Title:** MIT-8103 — Advanced Database Systems  
 **Institution:** Miva Open University  
-**Case Study Domain:** BlitzFintech Electronic Financial Services Architecture  
-**Repository Version:** 1.0.0  
+**Course:** MIT-8103 Advanced Database Systems  
+**Case study:** BlitzFintech digital financial services platform
 
----
+## Project overview
 
-## 1. Repository Overview
+This repository documents five related practical portfolios built around the same BlitzFintech case study. The relational system supports customer onboarding and KYC, accounts, mandates, deposits, withdrawals, transfers, ledger entries, approvals, and audit events. MongoDB exercises demonstrate document-oriented workloads; the distributed database lab demonstrates replication and sharding.
 
-This repository serves as the unified academic and engineering portfolio for **MIT8103 Advanced Database Systems**. The curriculum explores the full lifecycle of modern database engineering—spanning conceptual and physical relational modelling, query optimization, transactional concurrency control, polyglot persistence with NoSQL databases, and distributed cloud-native architectures.
+**Evidence status:** Implementation scripts and evidence files are included. Some items, especially Portfolio 3 execution outcomes, require verification against screenshots or a live database. The repository should not be interpreted as a production deployment.
 
-Throughout this module, the practical implementations are anchored in a realistic enterprise fintech case study: **BlitzFintech**, an electronic banking and financial technology platform requiring high data integrity, strict auditability, sub-millisecond query performance, and resilient fault tolerance.
+## Portfolio index
 
----
+| Portfolio | Scope | Repository evidence | Status |
+|---|---|---|---|
+| [1 — Database Design](Okwusogu_Mary_301903956_portfolio_1_database_design/Okwusogu_Mary_301903956_README.md) | Relational model, ERD, normalization, constraints, seed and validation | DDL, schema/design documents, validation SQL and screenshots | Implemented; evidence included |
+| [2 — Query Optimisation](Okwusogu_Mary_301903956_portfolio-2-query-optimisation/Okwusogu_Mary_301903956_README.md) | Query plans, indexing, before/after analysis | Six query exercises, SQL, plans, results and screenshot documents | Implemented; evidence included |
+| [3 — Transactions and Concurrency](Okwusogu_Mary_301903956_portfolio_3_transactions_concurrency/Okwusogu_Mary_301903956_README.md) | ACID transaction procedure, posting, rollback, idempotency, concurrency | Procedure and nine supporting SQL files; screenshot document | Scripts and evidence present; specific results not fully revalidated |
+| [4 — NoSQL](Okwusogu_Mary_301903956_portfolio_4_nosql/Okwusogu_Mary_301903956_README.md) | MongoDB document model, CRUD, indexes, aggregations, validation | Seven MongoDB scripts, suitability explanation, evidence | Implemented; evidence included |
+| [5 — Distributed and Cloud Databases](Okwusogu_Mary_301903956_portfolio_5_distributed_cloud/Okwusogu_Mary_301903956_README.md) | MySQL GTID replication/failover/failback, MongoDB Atlas assessment, local sharding | README and four DOCX evidence files; backup/reconciliation lab artifacts | Documented lab completed, with stated limitations |
 
-## 2. Portfolio Structure & Status Summary
+## Technical environment
 
-The repository is organized into five specialized portfolio modules. The table below delineates the current implementation status, core focus areas, and direct documentation links for each module:
+- **MySQL:** 8.0.x/InnoDB, database `blitzfintech_db`, original primary `MySQLMiva80` on port 3307; Portfolio 5 replica `MySQLBlitzReplica` on port 3308.
+- **MongoDB:** MongoDB Atlas for document-store work; separate local MongoDB sharding lab in Portfolio 5.
+- **Tools:** MySQL Workbench, PowerShell, mongosh, MongoDB Compass, Git and GitHub.
+- **Data:** Coursework demonstration data. Review any SQL dumps and screenshots for confidential or identifying content before sharing.
 
-| Portfolio Module | Focus Area | Primary Tech Stack | Status | Documentation Link |
-|---|---|---|---|---|
-| **Portfolio 1** | **Database Design and Implementation** | MySQL 8.x (InnoDB), MySQL Workbench | **Completed & Validated** | [Portfolio 1 README](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/README.md) |
-| **Portfolio 2** | **Query Optimisation** | MySQL 8.x CBO, `EXPLAIN ANALYZE`, Visual Explain | Planned / Roadmap | [Portfolio 2 README](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-2-query-optimisation/README.md) |
-| **Portfolio 3** | **Transactions and Concurrency Control** | InnoDB MVCC, Row Locking, Stored Procedures | Planned / Roadmap | [Portfolio 3 README](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-3-transactions-concurrency/README.md) |
-| **Portfolio 4** | **NoSQL Databases** | MongoDB, Redis, BSON Aggregations | Planned / Roadmap | [Portfolio 4 README](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-4-nosql/README.md) |
-| **Portfolio 5** | **Distributed and Cloud Databases** | MySQL Group Replication, Partitioning, Cloud DBaaS | Planned / Roadmap | [Portfolio 5 README](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-5-distributed-cloud/README.md) |
+## How to review
 
-> **Academic Rigour Notice:** Completed work is explicitly separated from planned future milestones. Portfolio 1 contains full production-grade SQL scripts, data dictionaries, formal reports, and documented screenshot evidence. Portfolios 2 through 5 currently define the architectural roadmaps, test methodologies, and target specifications ahead of active lab implementation.
+1. Open each portfolio's linked README for its scope, implementation and evidence.
+2. Review the scripts and supporting documents in that portfolio's actual folder.
+3. For Portfolio 2, compare the documented before/after plans and measurements; small test datasets limit performance generalization.
+4. For Portfolio 3, review `sp_post_financial_transaction`, posting examples, rollback/idempotency scripts, concurrent-session scripts and screenshots. The withdrawal example has an unresolved SQL/mandate-status issue; **do not execute it unmodified**.
+5. For Portfolio 5, distinguish the controlled same-host manual MySQL failover from production high availability; local MongoDB sharding is a teaching demonstration.
 
----
+## Assessment and submission notes
 
-## 3. High-Level Portfolio Summaries
+The course brief calls for five portfolios and a separate **2–3-page final LMS summary** with case-study overview, evidence, individual technical reflection, references, and an AI-use declaration. This README does not replace that final submission. Confirm the repository is **private**, grant the assessor access, and verify that required evidence is present in the committed repository. Removing `.git` from a shared ZIP does not change GitHub privacy settings.
 
-### [Portfolio 1: Relational Database Design and Implementation](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/README.md) *(Completed)*
-- **Core Deliverables:** 13-table normalized relational schema (targeting 3NF), 52 formal business rules, entity-relationship diagrams (visual PNG and Mermaid.js), relational schema data dictionary, and complete SQL script suite.
-- **Key Technical Features:** Explicit MySQL 8.x InnoDB engine enforcement, exact currency representations via `DECIMAL(19,4)`, supertype/subtype customer modeling, double-entry financial ledger journal lines, customer KYC lifecycle, and multi-party signing mandates.
-- **Validation & Evidence:** 100% engine compliance verified via `information_schema`, zero orphaned records, zero unbalanced ledger transactions, positive and negative constraint tests, transactional rollback demonstration, and 3 comprehensive screenshot evidence documents.
+## Integrity and limitations
 
-### [Portfolio 2: Query Optimisation](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-2-query-optimisation/README.md) *(Planned)*
-- **Planned Scope:** Query execution path profiling using `EXPLAIN FORMAT=JSON` and `EXPLAIN ANALYZE`, B-Tree index engineering (composite, covering, and prefix indexing), query refactoring (correlated subquery elimination, keyset pagination), and before-versus-after quantitative latency benchmarking.
-
-### [Portfolio 3: Transactions and Concurrency Control](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-3-transactions-concurrency/README.md) *(Planned)*
-- **Planned Scope:** Empirical investigation of ACID properties, multi-session parallel testing across ANSI SQL isolation levels (`READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`), deliberate reproduction and mitigation of concurrency anomalies (dirty reads, non-repeatable reads, phantom reads, lost updates), deadlock graph analysis (`SHOW ENGINE INNODB STATUS`), and comparing pessimistic locking (`FOR UPDATE`) with optimistic concurrency control.
-
-### [Portfolio 4: NoSQL Databases](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-4-nosql/README.md) *(Planned)*
-- **Planned Scope:** Polyglot persistence integrating MySQL with MongoDB (document store for variable-shape KYC verification payloads and audit event streams) and Redis (in-memory cache for idempotency deduplication and rate limiting). Includes document embedding vs. referencing trade-offs, multi-stage aggregation pipelines, and CAP theorem consistency evaluations.
-
-### [Portfolio 5: Distributed and Cloud Databases](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-5-distributed-cloud/README.md) *(Planned)*
-- **Planned Scope:** High-availability replication topologies (MySQL Group Replication with Paxos consensus), horizontal table partitioning (Range and Hash partitioning on transaction tables) with partition pruning, containerized multi-node clustering, automated failover chaos testing, and comparative analysis of cloud-native DBaaS (AWS Aurora / RDS Multi-AZ).
-
----
-
-## 4. Master Repository Directory Tree
-
-```
-c:\Users\mokwusogu\MIT8103\Okwusogu_Mary_301903956/
-├── README.md                                      # Master repository index (this document)
-│
-├── portfolio-1-database-design/                   # [COMPLETED]
-│   ├── README.md                                  # Portfolio 1 master documentation
-│   ├── 01-documentation/
-│   │   └── portfolio1-report.docx                 # Formal academic assessment report
-│   ├── 02-design/
-│   │   ├── business-rules.md                      # 52 formal business rules register
-│   │   ├── erd.mmd                                # Mermaid.js ERD model specification
-│   │   ├── normalisation.md                       # Normalisation (1NF, 2NF, 3NF) analysis
-│   │   ├── Okwusogu_Mary_ERD.png                  # Visual entity-relationship diagram
-│   │   ├── Okwusogu_Mary_ERD_Summary.xlsx         # Entity relationship summary matrix
-│   │   └── relational-schema.md                   # Full relational data dictionary
-│   └── 03-sql/
-│       ├── 01-create-database.sql                 # Database & engine initialization
-│       ├── 02-create-tables.sql                   # 13 DDL table creation scripts
-│       ├── 03-constraints-and-indexes.sql         # Metadata & constraint verification
-│       ├── 04-test-data.sql                       # Synthetic test data population
-│       ├── 05-validation-tests.sql                # Positive & negative constraint test harness
-│       ├── 06-sample-queries.sql                  # Analytical and operational queries
-│       ├── Okwusogu_Mary_Constraint_Validation_Screenshots.docx  # Constraint screenshots
-│       ├── Okwusogu_Mary_Data_Enrichment_Screenshot_Evidence.docx # Data screenshots
-│       ├── Okwusogu_Mary_Screenshot_Evidence.docx # End-to-end execution screenshots
-│       └── README.md                              # SQL execution runbook
-│
-├── portfolio-2-query-optimisation/                # [PLANNED / ROADMAP]
-│   └── README.md                                  # Query optimization architecture & roadmap
-│
-├── portfolio-3-transactions-concurrency/          # [PLANNED / ROADMAP]
-│   └── README.md                                  # Concurrency & transaction control roadmap
-│
-├── portfolio-4-nosql/                             # [PLANNED / ROADMAP]
-│   └── README.md                                  # NoSQL & polyglot persistence roadmap
-│
-└── portfolio-5-distributed-cloud/                 # [PLANNED / ROADMAP]
-    └── README.md                                  # Distributed & cloud architecture roadmap
-```
-
----
-
-## 5. Technology Stack & Prerequisites
-
-| Technology | Purpose | Module Application |
-|---|---|---|
-| **MySQL Community Server 8.0.x / 8.4 LTS** | Primary Relational DBMS & InnoDB Engine | Portfolios 1, 2, 3, 5 |
-| **MySQL Workbench 8.0.x** | SQL Development, ER Modeling & Visual Explain | Portfolios 1, 2, 3 |
-| **Mermaid.js & Markdown** | Architectural Schemas, Sequence Diagrams & Technical Docs | Portfolios 1–5 |
-| **MongoDB 7.x / 8.x** | Document-Oriented Storage for Semi-Structured Payloads | Portfolio 4 |
-| **Redis 7.x** | In-Memory Key-Value Caching & Rate Limiting | Portfolio 4 |
-| **Docker & Docker Compose** | Multi-Node Database Cluster Containerization | Portfolio 5 |
-| **AWS Cloud (Aurora / RDS)** | Cloud Database-as-a-Service (DBaaS) Reference | Portfolio 5 |
-
----
-
-## 6. How to Navigate and Review This Repository
-
-1. **Review Portfolio 1 Implementation:**
-   - Navigate to [portfolio-1-database-design/README.md](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/README.md).
-   - Inspect the relational model in [relational-schema.md](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/02-design/relational-schema.md) and [business-rules.md](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/02-design/business-rules.md).
-   - Review executable SQL in [portfolio-1-database-design/03-sql/](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-1-database-design/03-sql/).
-   - Review validation screenshot evidence in the `.docx` documents located in `portfolio-1-database-design/03-sql/`.
-2. **Review Upcoming Module Roadmaps:**
-   - [Portfolio 2: Query Optimisation](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-2-query-optimisation/README.md)
-   - [Portfolio 3: Transactions and Concurrency](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-3-transactions-concurrency/README.md)
-   - [Portfolio 4: NoSQL Databases](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-4-nosql/README.md)
-   - [Portfolio 5: Distributed and Cloud Databases](file:///c:/Users/mokwusogu/MIT8103/Okwusogu_Mary_301903956/portfolio-5-distributed-cloud/README.md)
-
----
-
-## 7. Academic Integrity, Ethics & Security Statement
-
-- **Synthetic Data Compliance:** All records, identifiers, customer names, corporate entities, phone numbers, and balances in this repository are 100% synthetic and generated solely for educational simulation. No actual Personal Identifiable Information (PII) or confidential banking data has been utilized.
-- **Credential Hygiene:** No live database passwords, access keys, cloud credentials, or private connection strings are committed to this repository.
-- **Originality & Authorship:** All relational designs, code, documentation, and diagrams were produced by Mary Okwusogu (ID: 301903956) in accordance with Miva Open University's academic integrity policies.
+Implementation claims should be assessed against SQL/JavaScript files and captured output. The project demonstrates academic lab scenarios rather than a certified banking platform. No automatic MySQL failover, independently tested pre-failback backup restore, or production-ready local MongoDB HA topology is claimed. Assistance from AI tools should be disclosed accurately in the final LMS declaration, including independent testing and corrections.

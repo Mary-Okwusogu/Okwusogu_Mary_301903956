@@ -274,16 +274,17 @@ A controlled **manual MySQL failover and failback** was completed, including rec
 
 ## 10. Evidence inventory and repository structure
 
-The existing portfolio directory is:
+The portfolio directory in the submitted archive is:
 
 ```text
 Okwusogu_Mary_301903956_portfolio_5_distributed_cloud/
 ├── Okwusogu_Mary_301903956_README.md
-├── Okwusogu_Mary_301903956_MySQL_ Replica_Setup_Evidence.docx
+├── Okwusogu_Mary_301903956_MySQL_Replica_Setup_Evidence.docx
+├── Okwusogu_Mary_301903956_MySQL_Failover_Evidence.docx
 ├── Okwusogu_Mary_301903956_MongoDB_ Replica_Evidence.docx
 ├── Okwusogu_Mary_301903956_MongoDB_ Sharding_Installation_Evidence.docx
 └── 06_failover_disaster_recovery/
-    ├── backups/
+    ├── backups/  # Included in shared ZIP; check confidentiality and Git tracking
     │   ├── blitzfintech_gtid_replication_backup.sql
     │   ├── blitzfintech_pre_replication.sql
     │   ├── blitzfintech_pre_failback_3307.sql
@@ -291,9 +292,9 @@ Okwusogu_Mary_301903956_portfolio_5_distributed_cloud/
     └── github_evidence/
 ```
 
-The backup and reconciliation filenames above were observed during the exercise; verify their current local presence and Git tracking before submission. The evidence DOCX files are listed because they were observed in the repository folder; their **contents have not been independently reviewed** in preparing this README. Before submission, confirm they contain screenshots and logs supporting the claims above, especially `SHOW REPLICA STATUS`, Atlas `rs.status()`, local `sh.status()`, `getShardDistribution()`, and both query execution plans. Do not add nonexistent evidence filenames.
+The backup and reconciliation filenames above were observed during the exercise; verify their current local presence and Git tracking before submission. The evidence DOCX files are listed because they were observed in the repository folder; their **contents require matching to individual claims** during final assessment. Before submission, confirm that screenshots and logs support each specific claim above, especially `SHOW REPLICA STATUS`, Atlas `rs.status()`, local `sh.status()`, `getShardDistribution()`, and both query execution plans. Do not add nonexistent evidence filenames.
 
-**Recommended final evidence:** Screenshots of the two MongoDB explain plans and shard distribution; MySQL pre-promotion and post-promotion GTIDs; failover and failback validation rows; final read-only settings; `SHOW REPLICA STATUS` after failback; and the backup/reconciliation file metadata. If stored in GitHub, use clear filenames and refer to the actual committed paths.
+**Final evidence verification:** Screenshots of the two MongoDB explain plans and shard distribution; MySQL pre-promotion and post-promotion GTIDs; failover and failback validation rows; final read-only settings; `SHOW REPLICA STATUS` after failback; and the backup/reconciliation file metadata. If stored in GitHub, use clear filenames and refer to the actual committed paths.
 
 ## 11. Completion status
 
@@ -314,7 +315,7 @@ The backup and reconciliation filenames above were observed during the exercise;
 | MySQL Group Replication / Docker cluster | Not implemented |
 | MySQL table partitioning | Not implemented |
 | New AWS Aurora/RDS deployment | Not implemented |
-| README and evidence final review | Pending local review and GitHub commit |
+| README and evidence documentation | Evidence files included in the submitted archive; GitHub commit reported completed by student, not independently verified from this ZIP |
 
 ## 12. Conclusion
 

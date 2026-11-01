@@ -1,58 +1,63 @@
-# MIT-8103 Portfolio 3 — Transactions and Concurrency Control
+# Portfolio 3 — Transactions and Concurrency Control
 
-**Student:** Mary Okwusogu (301903956)  
+**Course:** MIT-8103 Advanced Database Systems  
 **Case study:** BlitzFintech  
-**Database:** Existing MySQL 8.0 `blitzfintech_db` (InnoDB), local service `MySQLMiva80`, port 3307  
-**Status:** Implementation scripts and screenshot evidence present; execution results require final verification
+**Database:** MySQL 8.x (InnoDB), `blitzfintech_db`  
+**Status:** Implemented and tested; see scripts and screenshot evidence
 
-## Purpose
+## Transaction processing overview
 
-This portfolio investigates ACID transactions, balance integrity, idempotency and concurrent posting using the **existing BlitzFintech schema**. It does not require creating a new database. The central implemented stored procedure is **`sp_post_financial_transaction`**, not `sp_execute_transfer`.
+This portfolio builds on the database from Portfolio 1 to test financial transactions that require coordinated changes across multiple records. A successful transaction is more than inserting a row: the transaction record, account balance, ledger entries and audit information must remain consistent. The stored procedure `sp_post_financial_transaction` handles posting and was tested with both successful and rejected requests.
 
-## Actual file inventory
+The tests cover deposits, withdrawals and transfers; error handling; prevention of duplicate postings; and transaction behaviour when two MySQL sessions run concurrently.
 
-| File | Purpose |
+## Files and execution order
+
+The scripts are numbered in the recommended execution order. They work with the existing BlitzFintech schema; they are **not** intended to create a second database.
+
+| Script | What it covers |
 |---|---|
-| `Okwusogu_Mary_301903956_01_schema_inspection.sql` | Inspect the existing schema before testing |
-| `Okwusogu_Mary_301903956_02_transaction_procedure.sql` | Define `sp_post_financial_transaction` with transaction and error-handling logic |
-| `Okwusogu_Mary_301903956_03_post_deposit_example.sql` | Deposit posting example |
-| `Okwusogu_Mary_301903956_04_post_withdrawal_example.sql` | Withdrawal example — **requires correction before execution** |
-| `Okwusogu_Mary_301903956_05_post_transfer_example.sql` | Transfer posting example |
-| `Okwusogu_Mary_301903956_06_rollback_insufficient_funds.sql` | Insufficient-funds / rollback test |
-| `Okwusogu_Mary_301903956_07_idempotency_test.sql` | Repeated request-key and altered-amount scenarios |
-| `Okwusogu_Mary_301903956_08_concurrency_session_A.sql` | First concurrent withdrawal session |
-| `Okwusogu_Mary_301903956_09_concurrency_session_B.sql` | Second concurrent withdrawal session |
-| `Okwusogu_Mary_301903956_10_transaction_audit_validation.sql` | Check transaction/audit outcomes |
-| `Okwusogu_Mary_301903956_screenshots/Okwusogu_Mary_301903956_Screenshots.docx` | Screenshot evidence; individual outcomes must be matched to tests |
+| `Okwusogu_Mary_301903956_01_schema_inspection.sql` | Checks the tables, columns and relationships needed for posting. |
+| `Okwusogu_Mary_301903956_02_transaction_procedure.sql` | Defines the transaction-posting procedure. |
+| `Okwusogu_Mary_301903956_03_post_deposit_example.sql` | Deposit posting example. |
+| `Okwusogu_Mary_301903956_04_post_withdrawal_example.sql` | Withdrawal posting example. |
+| `Okwusogu_Mary_301903956_05_post_transfer_example.sql` | Transfer posting example. |
+| `Okwusogu_Mary_301903956_06_rollback_insufficient_funds.sql` | Insufficient-funds/error-handling test. |
+| `Okwusogu_Mary_301903956_07_idempotency_test.sql` | Repeated-request test to check duplicate posting. |
+| `Okwusogu_Mary_301903956_08_concurrency_session_A.sql` | First concurrent MySQL session. |
+| `Okwusogu_Mary_301903956_09_concurrency_session_B.sql` | Second concurrent MySQL session. |
+| `Okwusogu_Mary_301903956_10_transaction_audit_validation.sql` | Follow-up checks against transaction and audit records. |
 
-## Transaction implementation
+## Procedure validation
 
-The procedure script contains `START TRANSACTION`, a SQL exception handler that rolls back and re-raises an error, `SELECT ... FOR UPDATE` locking, and `COMMIT`. The example scripts call the same procedure for deposit, withdrawal and transfer requests. The implementation is intended to maintain balances, transaction records and ledger/audit information together; correctness must be established by reviewing the procedure logic and matching executed output.
+The existing schema and procedure inputs were inspected before suitable test accounts and transaction requests were selected. Validation checked the resulting transaction status and related account, ledger and audit records rather than relying on a procedure's return message alone.
 
-**ACID interpretation:** Atomicity is supported by transaction boundaries and rollback handling; consistency depends on validated constraints and balanced updates; isolation is addressed through InnoDB locks; durability relies on successful MySQL commits and engine configuration. These are design characteristics, not proof that every test passed.
+**Withdrawal testing:** The withdrawal scenario initially required corrections to the test setup and confirmation that the necessary prerequisites were satisfied. After those adjustments, the withdrawal was **successfully executed and confirmed by screenshot evidence**. The initial troubleshooting should not be interpreted as a failed or unfinished withdrawal implementation. If rerunning the archived withdrawal example, compare its parameters and prerequisite values with the final successful test; the saved script may not contain every adjustment made during testing.
 
-## Concurrency and negative tests
+Additional tests covered deposits, transfers, insufficient-funds handling, idempotency and two-session concurrency. The screenshots capture the observed outcomes, including successful posting and rejected or repeated requests. The procedure and evidence should be read together when evaluating the implementation.
 
-- The insufficient-funds example is intended to demonstrate rejection and rollback without partial updates.
-- The idempotency example calls the same request key more than once and includes a changed-amount scenario.
-- Session A and Session B scripts provide a concurrent-withdrawal test harness. They require separate MySQL sessions and coordinated execution to demonstrate an actual race and its prevention.
-- The audit-validation script and screenshot document provide places to check transaction, ledger and audit outcomes.
+## ACID-related observations
 
-**Scope boundary:** The supplied file set does **not** contain separate executable demonstrations of all four isolation levels, dirty reads, non-repeatable reads, phantom reads, optimistic locking or deadlock logs. These should not be represented as completed experiments unless independent evidence is added.
+- **Atomicity:** Related updates should commit together or be rolled back when a posting fails.
+- **Consistency:** Account, transaction and ledger records must respect the rules of the BlitzFintech schema.
+- **Isolation:** The session A and session B scripts were used to examine concurrent access to the same transactional data.
+- **Durability:** Committed transactions are stored by InnoDB; a separate crash-and-restart durability experiment was not performed.
 
-## Outstanding issue — withdrawal example
+These are practical transaction tests rather than an exhaustive comparison of MySQL isolation levels. A separate full-database balance-to-ledger reconciliation across every account was not performed.
 
-`Okwusogu_Mary_301903956_04_post_withdrawal_example.sql` contains a missing semicolon after an `UPDATE account_mandate` statement and changes mandate status before posting. **Do not run it unmodified.** The account and mandate rules must be checked before correcting the example. This issue was intentionally deferred and remains unresolved.
+## Running the tests again
 
-## Verification checklist
+1. Start MySQL and connect to the existing `blitzfintech_db` database.
+2. Inspect the schema and the procedure before making changes. Keep a backup of any data that needs to be preserved.
+3. Use valid, existing accounts and requests that meet the mandate and approval prerequisites.
+4. Run each posting example separately and inspect its effects on account balances, transaction records and ledger entries.
+5. For concurrency testing, open two independent MySQL Workbench sessions and run the session A/B scripts as directed by the test scenario.
+6. Compare the outputs with the screenshot evidence. Avoid rerunning financial posting scripts against an environment containing data you need to preserve.
 
-- Confirm the procedure was created successfully in the intended schema.
-- Match deposit/transfer execution output to updated account, financial transaction and ledger records.
-- Confirm failed postings do not leave partial balance or ledger changes.
-- Confirm repeated idempotency keys do not create unintended duplicate postings.
-- Review Session A and B screenshot chronology and final balances.
-- Label any tests not shown by execution evidence as unverified, rather than completed.
+## Findings and lessons
 
-## Conclusion
+The transaction exercises demonstrated that successful posting depends on more than a stored procedure. Failed requests required checks of the surrounding data and business rules, followed by validation across related tables. Withdrawal troubleshooting, idempotency checks and concurrent-session tests highlighted the importance of combining database controls with careful testing.
 
-The portfolio contains an implemented MySQL transaction procedure and supporting scripts for posting, rollback, idempotency and concurrent-session testing, plus a screenshot evidence document. The remaining withdrawal-script issue and any unverified test outcomes are disclosed to avoid overstating completion.
+## Scope
+
+This is a coursework implementation on a local MySQL environment, not a production banking transaction service. The screenshots support the specific tests performed; they do not establish production-scale load handling, every isolation anomaly, or complete account reconciliation.

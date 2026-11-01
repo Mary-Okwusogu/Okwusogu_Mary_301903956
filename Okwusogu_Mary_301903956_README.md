@@ -39,8 +39,31 @@ This repository documents five related practical portfolios built around the sam
 
 ## Assessment and submission notes
 
-The course brief calls for five portfolios and a separate **2–3-page final LMS summary** with case-study overview, evidence, individual technical reflection, references, and an AI-use declaration. This README does not replace that final submission. Confirm the repository is **private**, grant the assessor access, and verify that required evidence is present in the committed repository. Removing `.git` from a shared ZIP does not change GitHub privacy settings.
+The course brief calls for five portfolios and a separate **2–3-page final LMS summary** with case-study overview, evidence, individual technical reflection, references, and an AI-use declaration. This README does not replace that final submission. The lecturer subsequently instructed students in class to keep their GitHub repositories **public**. The repository was reported accessible in a signed-out browser test on 1 November 2026. Verify that the latest files are pushed and that no secrets or confidential data are exposed.
 
 ## Integrity and limitations
 
-Implementation claims should be assessed against SQL/JavaScript files and captured output. The project demonstrates academic lab scenarios rather than a certified banking platform. No automatic MySQL failover, independently tested pre-failback backup restore, or production-ready local MongoDB HA topology is claimed. Assistance from AI tools should be disclosed accurately in the final LMS declaration, including independent testing and corrections.
+Implementation claims should be assessed against SQL/JavaScript files and captured output. The project demonstrates academic lab scenarios rather than a certified banking platform. No automatic MySQL failover, independently tested pre-failback backup restore, or production-ready local MongoDB HA topology is claimed. AI assistance and synthetic-data provenance are declared below and in the final LMS report; any unverified tests remain identified as such.
+
+
+## Dataset provenance and ERD attribution
+
+The BlitzFintech case study uses **synthetic, fictional coursework data**, generated with assistance from ChatGPT rather than obtained from a real banking dataset. The seed data includes 100 fictional customers (60 individuals and 40 organisations), associated accounts, KYC documents, financial transactions, ledger entries and related records. This data was used for design, query, transaction, NoSQL and distributed-database exercises; it is not represented as real customer information. The relational entity-relationship diagram was modelled and visualised using **dbdiagram.io** and DBML.
+
+## Declaration of generative AI use
+
+**OpenAI ChatGPT** was used extensively for technical explanations, drafting and revising SQL and MongoDB scripts, synthetic-data generation, troubleshooting, implementation planning, README/documentation editing, and interpretation of results. **Google Gemini** was used as a supplementary AI assistant for some technical explanations and tasks. **dbdiagram.io** was used to draw and organise the relational ERD; it is a diagramming tool, not an AI-generated data source. AI suggestions were adapted to the BlitzFintech schema and, where executed, tested using MySQL Workbench, MongoDB tools and local services. The submitted scripts, screenshots and notes should be consulted for evidence of execution; not every proposed test or command is claimed to have been independently verified. The author remains responsible for the accuracy of the submitted work.
+
+## References and tools
+
+The dates below are **documented project-use dates from the coursework conversation**, not verified first visits to each website. Where the exact date a manual was consulted cannot be established, no access date is invented.
+
+- dbdiagram.io (2026). *dbdiagram.io — Database Relationship Diagrams (DBML).* https://dbdiagram.io/ (project use documented **21 October 2026**).
+- OpenAI (2026). *ChatGPT* [generative AI assistant]. https://chatgpt.com/ (documented use throughout the project, including **11 October–1 November 2026**).
+- Google (2026). *Gemini* [generative AI assistant]. https://gemini.google.com/ (used during the project; **exact date not established**).
+- Oracle. *MySQL 8.0 Reference Manual.* https://dev.mysql.com/doc/refman/8.0/en/ (technical reference; **access date not established**).
+- MongoDB, Inc. *MongoDB Manual.* https://www.mongodb.com/docs/manual/ (technical reference; **access date not established**).
+- MongoDB, Inc. *MongoDB Atlas Documentation.* https://www.mongodb.com/docs/atlas/ (technical reference; **access date not established**).
+- Miva Open University (2026). *MIT-8103 Advanced Database Systems continuous assessment brief, September cohort* [course-provided assessment document].
+
+Only retain the technical-manual entries above if those resources were actually consulted; otherwise treat them as recommended background reading rather than sources used.

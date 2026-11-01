@@ -8,9 +8,11 @@
 
 ## Project overview
 
-This repository documents five related practical portfolios built around the same BlitzFintech case study. The relational system supports customer onboarding and KYC, accounts, mandates, deposits, withdrawals, transfers, ledger entries, approvals, and audit events. MongoDB exercises demonstrate document-oriented workloads; the distributed database lab demonstrates replication and sharding.
+This repository contains five practical portfolios developed around **BlitzFintech**, a fictional financial technology company. The project focuses on designing and implementing a database system that supports key financial operations, including customer onboarding, Know Your Customer (KYC) verification, account management, mandates, deposits, withdrawals, transfers, transaction approvals, ledger management, and audit logging.
 
-**Evidence status:** Implementation scripts and evidence files are included. Some items, especially Portfolio 3 execution outcomes, require verification against screenshots or a live database. The repository should not be interpreted as a production deployment.
+The project uses **MySQL** to manage structured financial data and **MongoDB** to handle more flexible, document-based information, such as KYC records and mandate documents. Beyond database design and implementation, the portfolios also explore query optimisation, transaction management, concurrency, replication, and sharding to demonstrate how databases can be managed, scaled, and maintained in a financial services environment.
+
+**Implementation Evidence:** The repository includes the SQL scripts, implementation files, and supporting evidence for the work carried out across the five portfolios. However, some results, particularly those relating to transaction execution in Portfolio 3, still need to be confirmed against the available screenshots or verified directly in the database.
 
 ## Portfolio index
 

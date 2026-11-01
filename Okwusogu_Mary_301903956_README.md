@@ -36,7 +36,7 @@ The project uses **MySQL** to manage structured financial data and **MongoDB** t
 1. Open each portfolio's linked README for its scope, implementation and evidence.
 2. Review the scripts and supporting documents in that portfolio's actual folder.
 3. For Portfolio 2, compare the documented before/after plans and measurements; small test datasets limit performance generalization.
-4. For Portfolio 3, review `sp_post_financial_transaction`, posting examples, rollback/idempotency scripts, concurrent-session scripts and screenshots. The withdrawal example has an unresolved SQL/mandate-status issue; **do not execute it unmodified**.
+4. For Portfolio 3, review `sp_post_financial_transaction`, posting examples, rollback/idempotency scripts, concurrent-session scripts and screenshots. 
 5. For Portfolio 5, distinguish the controlled same-host manual MySQL failover from production high availability; local MongoDB sharding is a teaching demonstration.
 
 ## Assessment and submission notes
